@@ -5,13 +5,28 @@ import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines,  MarkSerie
 import Highlight from './Highlight';
 
 let bubbleData=[
-  {x: 1, y: 10, size: 30},
-  {x: 1.7, y: 12, size: 10},
-  {x: 2, y: 5, size: 1},
-  {x: 3, y: 15, size: 12},
-  {x: 4.5, y: 3, size: 4},
-  {x: 3, y: 15, size: 15},
-  {x: 1.5, y: 7, size: 4}
+  {x: 0, y: 0, size: 0},
+  {x: 1, y: 10, size: 7},
+  {x: 1.7, y: 12, size: 9},
+  {x: 2.3, y: 5, size: 3},
+  {x: 3, y: 10.5, size: 12},
+  {x: 4.5, y: 3, size: 20},
+  {x: 6, y: 10, size: 10},
+  {x: 2.5, y: 7.5, size: 6},
+  {x: 5, y: 1.5, size: 17},
+  {x: 3.6, y: 1.8, size: 10},
+  {x: 2.5, y: 7, size: 14},
+  {x: 2, y: 5, size: 12},
+  {x: 3, y: 10.5, size: 18},
+  {x: 1.5, y: 7, size: 20},
+  {x: 4, y: 5.8, size: 12},
+  {x: 5.5, y: 3, size: 4},
+  {x: 6, y: 2, size: 15},
+  {x: 4.5, y: 7.8, size: 19},
+  {x: 3.2, y: 8, size: 10},
+  {x: 5.5, y: 10.3, size: 6},
+  {x: 4, y: 2, size: 5},
+  {x: 1.5, y: 7.2, size: 9}
 ];
 
 
@@ -30,14 +45,15 @@ class TradingBubble extends Component {
         const xChosen= selectedBubbles.x;
         const yChosen= selectedBubbles.y;
         const sizeChosen= selectedBubbles.size;
+
       return(
-        <li>Bubbles
+        <p>Bubble
         <ul>
-          <li>{xChosen}</li>
-          <li>{yChosen}</li>
-          <li>{sizeChosen}</li>
+          <li>X Coordinate: {xChosen}</li>
+          <li>Y Coordinate: {yChosen}</li>
+          <li>Z Coordinate: {sizeChosen}</li>
         </ul>
-       </li>
+        </p>
       );
     }
 
@@ -56,15 +72,31 @@ class TradingBubble extends Component {
         const numSelectedPoints = filter ? bubbleData.filter(highlightPoint) : [];
         console.log(numSelectedPoints);
 
+        const bubbleContainer = {
+          border: "1px solid #ccc",
+          height: "300px",
+          overflowY: "scroll"
+        }
+
     return(
       <div>
              <XYPlot
-               width={300}
-               height={300}>
+               width={800}
+               height={600}>
                <VerticalGridLines />
                <HorizontalGridLines />
-               <XAxis />
-               <YAxis />
+               <XAxis  tickValues={[0, 1, 2, 3, 4, 5, 6]}
+               style={{
+          line: {stroke: 'rgb(152, 154, 160)'},
+          ticks: {stroke: 'rgb(152, 154, 160)'},
+          text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
+        }} />
+               <YAxis tickValues={[0, 3, 6, 9, 12]}
+        style={{
+          line: {stroke: 'rgb(152, 154, 160)'},
+          ticks: {stroke: 'rgb(152, 154, 160)'},
+          text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
+        }}/>
                <Highlight
                  drag
                  onBrushStart={() => this.setState({highlighting: true})}
@@ -77,7 +109,7 @@ class TradingBubble extends Component {
                  className="mark-series-example"
                  strokeWidth={2}
                  opacity="0.8"
-                 sizeRange={[30, 30]}
+                 sizeRange={[0, 20]}
                  style={{pointerEvents: highlighting ? 'none' : ''}}
                  colorType="literal"
                  getColor={d => highlightPoint(d) ? '#EF5D28' : '#12939A'}
@@ -87,7 +119,7 @@ class TradingBubble extends Component {
                {hovered && <Hint value={hovered}/>}
              </XYPlot>
              <p>{`There are ${numSelectedPoints.length} selected points`}</p>
-             <p>
+             <p style={bubbleContainer}>
 
                {numSelectedPoints.map(this.renderBubbleChosen)}
 
