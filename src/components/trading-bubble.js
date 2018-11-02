@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-
+import _ from 'lodash';
 
 import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines,  MarkSeries, MarkSeriesCanvas, Hint} from 'react-vis';
 import Highlight from './Highlight';
@@ -29,7 +29,18 @@ let bubbleData=[
   {x: 1.5, y: 7.2, size: 9}
 ];
 
-
+const selectedData = [
+  {x: 0, y: 8, size: 23 , selected: _.sample([true, false])},
+  {x: 1, y: 5, size: 23 , selected: _.sample([true, false])},
+  {x: 2, y: 4, size: 23 , selected: _.sample([true, false])},
+  {x: 3, y: 9, size: 23 , selected: _.sample([true, false])},
+  {x: 4, y: 1, size: 23 , selected: _.sample([true, false])},
+  {x: 5, y: 7, size: 23 , selected: _.sample([true, false])},
+  {x: 6, y: 6, size: 23 , selected: _.sample([true, false])},
+  {x: 7, y: 3, size: 23 , selected: _.sample([true, false])},
+  {x: 8, y: 2, size: 23 , selected: _.sample([true, false])},
+  {x: 9, y: 0, size: 23 , selected: _.sample([true, false])}
+];
 
 class TradingBubble extends Component {
 
@@ -57,6 +68,10 @@ class TradingBubble extends Component {
       );
     }
 
+  componentDidMount(){
+
+  }
+
   render(){
     const {filter, hovered, highlighting} = this.state;
 
@@ -70,7 +85,7 @@ class TradingBubble extends Component {
           return leftRight && upDown;
         };
         const numSelectedPoints = filter ? bubbleData.filter(highlightPoint) : [];
-        console.log(numSelectedPoints);
+        //console.log(numSelectedPoints);
 
         const bubbleContainer = {
           border: "1px solid #ccc",
@@ -81,21 +96,21 @@ class TradingBubble extends Component {
     return(
       <div>
              <XYPlot
-               width={800}
-               height={600}>
+               width={1200}
+               height={800}>
                <VerticalGridLines />
                <HorizontalGridLines />
                <XAxis  tickValues={[0, 1, 2, 3, 4, 5, 6]}
                style={{
-          line: {stroke: 'rgb(152, 154, 160)'},
-          ticks: {stroke: 'rgb(152, 154, 160)'},
-          text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
+                line: {stroke: 'rgb(152, 154, 160)'},
+                ticks: {stroke: 'rgb(152, 154, 160)'},
+                text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
         }} />
                <YAxis tickValues={[0, 3, 6, 9, 12]}
         style={{
-          line: {stroke: 'rgb(152, 154, 160)'},
-          ticks: {stroke: 'rgb(152, 154, 160)'},
-          text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
+                line: {stroke: 'rgb(152, 154, 160)'},
+                ticks: {stroke: 'rgb(152, 154, 160)'},
+                text: {stroke: 'none', fill: 'rgb(152, 154, 160)'}
         }}/>
                <Highlight
                  drag
@@ -109,13 +124,14 @@ class TradingBubble extends Component {
                  className="mark-series-example"
                  strokeWidth={2}
                  opacity="0.8"
-                 sizeRange={[0, 20]}
+                 sizeRange={[0, 40]}
                  style={{pointerEvents: highlighting ? 'none' : ''}}
                  colorType="literal"
-                 getColor={d => highlightPoint(d) ? '#EF5D28' : '#12939A'}
+                 getColor={d => d.selected || highlightPoint(d) ? '#EF5D28' : '#12939A'}
                  onValueMouseOver={d => this.setState({hovered: d})}
                  onValueMouseOut={d => this.setState({hovered: false})}
-                 data={bubbleData}/>
+                 onValueClick={(d) => this.setState({ filter : {right:d.x,left:d.x,bottom:d.y,top:d.y}})}
+                 data={selectedData}/>
                {hovered && <Hint value={hovered}/>}
              </XYPlot>
              <p>{`There are ${numSelectedPoints.length} selected points`}</p>
